@@ -18,27 +18,27 @@ const signer = ethers.Wallet.fromMnemonic(mnemonic, `m/44\'/60\'/0\'/0/${childNu
 prompt(`Address: ${signer.address}\nFund account using a Ropsten faucet (e.g. https://faucet.ropsten.be/). Press \'Enter\' to continue...`);
 
 // creates unsigned transaction
-const value = ethers.utils.parseEther(prompt('How much ether would you like to send? '));
+const value = ethers.utils.parseEther(prompt('How much ether would you like to send? ')); // ether to wei conversion
+const gasFeeData = await provider.getFeeData();
 const txData = {
+    type: 2,
     to: '0xcDA0D6adCD0f1CCeA6795F9b1F23a27ae643FE7C', // ropsten faucet (https://faucet.ropsten.be/)
     nonce: await provider.getTransactionCount(signer.address), // protect against relay attack
     gasLimit: 21000, // gas limit of standard ethereum transfer
+    maxFeePerGas: gasFeeData.maxFeePerGas,
+    maxPriorityFeePerGas: gasFeeData.maxPriorityFeePerGas,
     data: '',
     value: value,
     chainId: 3,
-}; // gasPrice, maxFeePerGas, maxPriorityFeePerGas are left unspecified - ethers determines these values from the network
+}; // EIP-1559 transactions do not use the 'gasPrice' parameter
 const unsignedTx = ethers.utils.serializeTransaction(txData); // serializes txData
 
 // sign transacton
 let { v, r, s, ...unsignedTxParsed } = ethers.utils.parseTransaction(unsignedTx);
 const signedTx = await signer.signTransaction(unsignedTxParsed);
-const txHash = keccak256(signedTx);
-// console.log(`Signed transaction hex: ${signedTx}`);
+console.log(`Serialized signed transaction: ${signedTx}\n`);
 
 // broadcast transaction
-const response = await provider.sendTransaction(signedTx);
-console.log(response);
-console.log(signedTx);
-console.log(`https://ropsten.etherscan.io/tx/${txHash}`);
-
-
+await provider.sendTransaction(signedTx);
+const txHash = keccak256(signedTx);
+console.log(`New transaction: https://ropsten.etherscan.io/tx/${txHash}`);
