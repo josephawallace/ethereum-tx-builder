@@ -29,12 +29,12 @@ const txData = {
     maxPriorityFeePerGas: gasFeeData.maxPriorityFeePerGas,
     data: '',
     value: value,
-    chainId: 3,
+    chainId: 3, // protects against relay attack
 }; // EIP-1559 transactions do not use the 'gasPrice' parameter
 const unsignedTx = ethers.utils.serializeTransaction(txData); // serializes txData
 
 // sign transacton
-let { v, r, s, ...unsignedTxParsed } = ethers.utils.parseTransaction(unsignedTx);
+const unsignedTxParsed = ethers.utils.parseTransaction(unsignedTx);
 const signedTx = await signer.signTransaction(unsignedTxParsed);
 console.log(`Serialized signed transaction: ${signedTx}\n`);
 
