@@ -22,7 +22,7 @@ An Ethereum transaction takes different inputs than a Bitcoin transaction; most 
 
 ### Nonce
 
-To avoid the same transaction being propagated through the network, a nonce is included in the transaction's data. The nonce is an attribute associated with an account; it begins at zero and is incremented by one for each of the account's transactions that is *confirmed* on the blockchain. This way, raw transaction hexes are unique. Transactions are eligible to be confirmed if the nonce is agreed to correctly reflect the number of transactions sent by the account. So if I send two identical transactions with the same nonce, only one will be accepted, hence protecting against double spending.
+To avoid the same transaction being propagated through the network, a nonce is included in the transaction's data. The nonce is an attribute associated with an account; it begins at zero and is incremented by one for each of the account's transactions that is *confirmed* on the blockchain. This way, raw transaction hexes are unique. Transactions are eligible to be confirmed if the nonce is agreed to correctly reflect the number of transactions sent by the account. Otherwise, someone would be able to copy and resend a previous transaction until the originating address is drained of ether. 
 
 ### Chain ID
 
