@@ -33,7 +33,7 @@ const txData = {
 }; // EIP-1559 transactions do not use the 'gasPrice' parameter
 const unsignedTx = ethers.utils.serializeTransaction(txData); // serializes txData
 
-// sign transacton
+// sign transaction
 const unsignedTxParsed = ethers.utils.parseTransaction(unsignedTx);
 const signedTx = await signer.signTransaction(unsignedTxParsed);
 console.log(`Serialized signed transaction: ${signedTx}\n`);
